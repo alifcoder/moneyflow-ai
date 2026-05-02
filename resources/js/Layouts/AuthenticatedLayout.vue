@@ -39,6 +39,24 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('currencies.index')"
+                                    :active="route().current('currencies.index')"
+                                >
+                                    Currencies
+                                </NavLink>
+                                <NavLink
+                                    :href="route('categories.index')"
+                                    :active="route().current('categories.index')"
+                                >
+                                    Categories
+                                </NavLink>
+                                <NavLink
+                                    :href="route('cashboxes.index')"
+                                    :active="route().current('cashboxes.index')"
+                                >
+                                    Cashboxes
+                                </NavLink>
                             </div>
                         </div>
 
@@ -145,6 +163,24 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('currencies.index')"
+                            :active="route().current('currencies.index')"
+                        >
+                            Currencies
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('categories.index')"
+                            :active="route().current('categories.index')"
+                        >
+                            Categories
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('cashboxes.index')"
+                            :active="route().current('cashboxes.index')"
+                        >
+                            Cashboxes
                         </ResponsiveNavLink>
                     </div>
 
