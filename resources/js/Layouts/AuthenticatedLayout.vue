@@ -57,6 +57,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Cashboxes
                                 </NavLink>
+                                <NavLink
+                                    :href="route('transactions.index')"
+                                    :active="route().current('transactions.*')"
+                                >
+                                    Transactions
+                                </NavLink>
                             </div>
                         </div>
 
@@ -181,6 +187,12 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('cashboxes.index')"
                         >
                             Cashboxes
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('transactions.index')"
+                            :active="route().current('transactions.*')"
+                        >
+                            Transactions
                         </ResponsiveNavLink>
                     </div>
 

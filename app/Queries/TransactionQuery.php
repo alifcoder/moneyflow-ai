@@ -34,6 +34,14 @@ class TransactionQuery
             $query->where('category_id', $request->integer('category_id'));
         }
 
+        if ($request->filled('currency_id')) {
+            $query->where('currency_id', $request->integer('currency_id'));
+        }
+
+        if ($request->filled('search')) {
+            $query->where('comment', 'like', '%'.$request->string('search')->toString().'%');
+        }
+
         if ($request->filled('date_from')) {
             $query->whereDate('transaction_date', '>=', $request->date('date_from')->toDateString());
         }
