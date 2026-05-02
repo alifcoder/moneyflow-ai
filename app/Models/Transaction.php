@@ -51,7 +51,7 @@ class Transaction extends Model
      */
     public function scopeOwnedBy(Builder $query, User $user): Builder
     {
-        return $query->where('user_id', $user->id);
+        return $query->where('transactions.user_id', $user->id);
     }
 
     /**
