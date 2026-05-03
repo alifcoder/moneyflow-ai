@@ -8,7 +8,6 @@
 .codex
 
 .env
-.env.dev
 .env.*
 !.env.production.example
 
