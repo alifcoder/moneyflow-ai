@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile.prod
+    container_name: moneyflow_app
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - moneyflow_storage:/var/www/moneyflow-ai/storage
+    depends_on:
+      - postgres
+      - redis
+
+  web:
+    image: nginx:alpine
+    container_name: moneyflow_web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8088:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - moneyflow_storage:/var/www/moneyflow-ai/storage
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: moneyflow_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: moneyflow
+      POSTGRES_USER: moneyflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - moneyflow_pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: moneyflow_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - moneyflow_redis:/data
+
+volumes:
+  moneyflow_pgdata:
+  moneyflow_storage:
+  moneyflow_redis:

@@ -1,0 +1,60 @@
+FROM composer:2 AS vendor
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts
+
+COPY . .
+
+RUN composer dump-autoload --optimize
+
+
+FROM node:24-alpine AS frontend
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY --from=vendor /app/vendor ./vendor
+COPY resources ./resources
+COPY vite.config.* ./
+COPY public ./public
+
+RUN npm run build
+
+
+FROM php:8.5-fpm-alpine AS app
+
+WORKDIR /var/www/moneyflow-ai
+
+RUN apk add --no-cache \
+    bash \
+    icu-dev \
+    libzip-dev \
+    postgresql-dev \
+    oniguruma-dev \
+    && apk add --no-cache --virtual .build-deps \
+        $PHPIZE_DEPS \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        intl \
+        zip \
+        bcmath \
+    && apk del .build-deps
+
+COPY --from=vendor /app /var/www/moneyflow-ai
+COPY --from=frontend /app/public/build /var/www/moneyflow-ai/public/build
+
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+USER www-data
+
+CMD ["php-fpm"]
