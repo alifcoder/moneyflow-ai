@@ -13,6 +13,26 @@ const showingNavigationDropdown = ref(false);
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
+            <div
+                v-if="$page.props.auth.impersonation?.active"
+                class="bg-amber-50 px-4 py-2 text-sm text-amber-900"
+            >
+                <div class="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        Logged in as {{ $page.props.auth.user.name }}.
+                        SuperAdmin: {{ $page.props.auth.impersonation.impersonator.name }}.
+                    </div>
+                    <Link
+                        :href="route('impersonation.destroy')"
+                        method="post"
+                        as="button"
+                        class="rounded-md bg-amber-900 px-3 py-1.5 text-left text-xs font-semibold text-white hover:bg-amber-800 sm:text-center"
+                    >
+                        Back to SuperAdmin
+                    </Link>
+                </div>
+            </div>
+
             <nav
                 class="border-b border-gray-100 bg-white"
             >
@@ -68,6 +88,13 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('reports.index')"
                                 >
                                     Reports
+                                </NavLink>
+                                <NavLink
+                                    v-if="$page.props.auth.canManageUsers"
+                                    :href="route('users.index')"
+                                    :active="route().current('users.*')"
+                                >
+                                    Users
                                 </NavLink>
                             </div>
                         </div>
@@ -205,6 +232,13 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('reports.index')"
                         >
                             Reports
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="$page.props.auth.canManageUsers"
+                            :href="route('users.index')"
+                            :active="route().current('users.*')"
+                        >
+                            Users
                         </ResponsiveNavLink>
                     </div>
 

@@ -14,21 +14,27 @@ class UserRoleTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_normal_registered_user_has_user_role(): void
+    public function test_super_admin_created_user_has_user_role(): void
     {
-        $response = $this->post('/register', [
+        $superAdmin = User::factory()->create([
+            'role' => UserRoleEnum::SUPER_ADMIN,
+        ]);
+
+        $response = $this->actingAs($superAdmin)->post(route('users.store'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'role' => UserRoleEnum::USER->value,
         ]);
 
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect();
 
         $user = User::query()->where('email', 'test@example.com')->firstOrFail();
 
         $this->assertSame(UserRoleEnum::USER, $user->role);
+        $this->assertNotNull($user->email_verified_at);
     }
 
     public function test_seeded_admin_has_super_admin_role(): void

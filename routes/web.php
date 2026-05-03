@@ -4,23 +4,15 @@ use App\Http\Controllers\CashboxController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
+Route::redirect('/dashboard', '/');
 
 Route::middleware('auth')->group(function () {
     Route::resource('currencies', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -28,6 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('cashboxes', CashboxController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('transactions', TransactionController::class)->except(['show']);
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::resource('users', UserManagementController::class)->only(['index', 'store']);
+    Route::post('users/{user}/impersonate', [ImpersonationController::class, 'store'])->name('users.impersonate');
+    Route::post('impersonation/stop', [ImpersonationController::class, 'destroy'])->name('impersonation.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

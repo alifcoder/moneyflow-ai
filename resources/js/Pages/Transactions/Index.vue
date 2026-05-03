@@ -245,7 +245,7 @@ const signedAmount = (transaction) =>
                     v-if="transactions.data.length > 0"
                     class="hidden rounded-lg bg-white shadow-sm md:block md:overflow-x-auto"
                 >
-                    <table class="min-w-[52rem] divide-y divide-gray-200">
+                    <table class="w-full min-w-[52rem] divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
