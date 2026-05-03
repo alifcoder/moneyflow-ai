@@ -2,13 +2,11 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile.prod
+      dockerfile: docker/php/DockerFileProd
     container_name: moneyflow_app
     restart: unless-stopped
     env_file:
       - .env.production
-    volumes:
-      - moneyflow_storage:/var/www/moneyflow-ai/storage
     depends_on:
       - postgres
       - redis
@@ -16,7 +14,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: docker/nginx/Dockerfile.prod
+      dockerfile: docker/nginx/DockerFileProd
     container_name: moneyflow_web
     restart: unless-stopped
     ports:
@@ -45,5 +43,4 @@ services:
 
 volumes:
   moneyflow_pgdata:
-  moneyflow_storage:
   moneyflow_redis:

@@ -1,6 +1,0 @@
-FROM nginx:alpine
-
-WORKDIR /var/www/moneyflow-ai
-
-COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY public ./public
