@@ -2,7 +2,7 @@ services:
     app:
         build:
             context: .
-            dockerfile: docker/php/Dockerfile
+            dockerfile: docker/php/DockerFile
         container_name: moneyflow_app
         working_dir: /var/www/moneyflow-ai
         volumes:

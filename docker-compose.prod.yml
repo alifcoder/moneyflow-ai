@@ -3,25 +3,24 @@ services:
     build:
       context: .
       dockerfile: docker/php/DockerFileProd
+      target: app
     container_name: moneyflow_app
     restart: unless-stopped
     env_file:
       - .env.production
-    volumes:
-      - app_public:/var/www/moneyflow-ai/public
     depends_on:
       - postgres
       - redis
 
   web:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: docker/php/DockerFileProd
+      target: web
     container_name: moneyflow_web
     restart: unless-stopped
     ports:
       - "${APP_BIND_IP:-127.0.0.1}:8088:80"
-    volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - app_public:/var/www/moneyflow-ai/public
     depends_on:
       - app
 
@@ -47,4 +46,3 @@ services:
 volumes:
   moneyflow_pgdata:
   moneyflow_redis:
-  app_public:
